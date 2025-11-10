@@ -161,7 +161,7 @@ It merges AI-driven ingredient recognition with a **secure local database** and 
 ```
 ## 8. 📄 Output Specification
 
-###7.1 JSON Schema for Scan Results
+### 7.1 JSON Schema for Scan Results
 ```json
 {
   "productName": "string",
