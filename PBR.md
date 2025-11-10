@@ -17,6 +17,15 @@ Using **Gemini 2.5 Pro** for OCR and ingredient analysis, the system flags poten
 It merges AI-driven ingredient recognition with a **secure local database** and a **beautiful, user-friendly design**, ensuring privacy, accuracy, and ethical alignment.
 
 ---
+| ID    | Objective            | Description                                                                         |
+| ----- | -------------------- | ----------------------------------------------------------------------------------- |
+| OBJ-1 | Ingredient Scanning  | Enable users to upload or capture an image of food/cosmetic products.               |
+| OBJ-2 | OCR & AI Analysis    | Use Gemini 2.5 Pro API to extract ingredients from product labels.                  |
+| OBJ-3 | Halal Risk Detection | Classify ingredients as **Safe**, **Doubtful**, or **Non-Halal** with explanations. |
+| OBJ-4 | Data Storage         | Store scanned product information and results in a local or cloud DB.               |
+| OBJ-5 | Secure API Usage     | Request and store user’s Gemini API key securely (encrypted).                       |
+| OBJ-6 | User Experience      | Provide a clean, attractive, mobile-first interface.                                |
+| OBJ-7 | Safety & Privacy     | Avoid religious judgments; ensure data security and cultural sensitivity.           |
 
 ## 2. 🎯 Vision Statement
 
@@ -35,6 +44,19 @@ It merges AI-driven ingredient recognition with a **secure local database** and 
 ---
 
 ## 4. ⚙️ Functional Requirements
+
+| ID    | Category               | Requirement                                            | Priority |
+| ----- | ---------------------- | ------------------------------------------------------ | -------- |
+| FR-01 | Image Input            | Allow users to upload or take a product photo.         | High     |
+| FR-02 | API Integration        | Use Gemini 2.5 Pro API for OCR + visual parsing.       | High     |
+| FR-03 | Ingredient Detection   | Identify ingredients and generate list.                | High     |
+| FR-04 | Risk Classification    | Tag ingredients as Safe/Doubtful/Non-Halal.            | High     |
+| FR-05 | Result Explanation     | Provide reason and confidence for each tag.            | Medium   |
+| FR-06 | Local Storage          | Save previous scans and metadata.                      | High     |
+| FR-07 | API Key Management     | Store API key securely (encrypted).                    | High     |
+| FR-08 | UI Feedback            | Alert users when a product includes risky ingredients. | High     |
+| FR-09 | Multi-Language Support | Support English / Arabic / French.                     | Medium   |
+| FR-10 | Educational Insights   | Suggest safer alternatives or notes.                   | Low      |
 
 ### 4.1 Image Input & Processing
 - Users can **upload** or **capture** product images.
@@ -74,9 +96,19 @@ It merges AI-driven ingredient recognition with a **secure local database** and 
 - PWA caching system allows last scans to be viewed offline.
 - Basic UI accessible even when disconnected.
 
+## 5. ⚙️ Non-Functional Requirements
 ---
+| ID     | Type                | Description                                                            | Target     |
+| ------ | ------------------- | ---------------------------------------------------------------------- | ---------- |
+| NFR-01 | **Performance**     | Scan + analysis should complete in < 5 seconds (on stable connection). | 5s         |
+| NFR-02 | **Security**        | Encrypt API key using AES or OS-secure storage.                        | 100%       |
+| NFR-03 | **Privacy**         | No personal data sent externally.                                      | 100%       |
+| NFR-04 | **Availability**    | PWA must function offline with cached history.                         | 99% uptime |
+| NFR-05 | **Accessibility**   | Interface must meet WCAG 2.1 AA standards.                             | Pass       |
+| NFR-06 | **Scalability**     | Backend must support at least 10k daily active users.                  | 10k/day    |
+| NFR-07 | **Maintainability** | Code modular and documented (SOLID, DRY).                              | ✅          |
 
-## 5. 🖥️ User Interface Requirements
+## 6. 🖥️ User Interface Requirements
 
 | Element | Description |
 |----------|--------------|
@@ -90,16 +122,24 @@ It merges AI-driven ingredient recognition with a **secure local database** and 
 
 ---
 
-## 6. 🤖 AI & Technical Architecture
+## 7. 🤖 AI & Technical Architecture
+| Component                       | Description                                                                              |
+| ------------------------------- | ---------------------------------------------------------------------------------------- |
+| **Frontend (PWA)**              | Built with modern UI (React/Vue/Angular). Mobile-first, responsive, and offline capable. |
+| **Backend API Layer**           | Manages user sessions, product scan requests, and database operations.                   |
+| **AI Agent (TayyibFood Agent)** | Core intelligent system prompt managing image → ingredient → halal analysis pipeline.    |
+| **Gemini 2.5 Pro API**          | External image understanding and OCR model used for ingredient detection.                |
+| **Database**                    | Stores scanned results, product metadata, and user configuration securely.               |
+| **Encryption Module**           | Ensures safe storage of API keys and user preferences locally.                           |
 
-### 6.1 AI Workflow
+### 7.1 AI Workflow
 1. **Input:** Product image uploaded or captured.
 2. **OCR Stage:** Gemini 2.5 extracts text.
 3. **Ingredient Parsing:** Text filtered, cleaned, and tokenized.
 4. **Halal Risk Check:** Ingredients cross-referenced with known database.
 5. **Output:** JSON response with risk analysis and explanations.
 
-### 6.2 System Components
+### 7.2 System Components
 - **Frontend:** PWA (React, Next.js, or Angular)
 - **Backend:** Node.js or Spring Boot API
 - **AI Model:** Gemini 2.5 Pro (OCR + classification)
@@ -107,7 +147,7 @@ It merges AI-driven ingredient recognition with a **secure local database** and 
 - **Storage:** Encrypted product history cache
 - **Authentication:** Local user session or API key-based
 
-### 6.3 API Data Flow
+### 7.3 API Data Flow
 ```text
 [User Image] 
    ↓
@@ -118,3 +158,26 @@ It merges AI-driven ingredient recognition with a **secure local database** and 
 [Local DB + Risk JSON]
    ↓
 [UI Visualization Layer]
+```
+## 8. 📄 Output Specification
+
+###7.1 JSON Schema for Scan Results
+```json
+{
+  "productName": "string",
+  "brand": "string|null",
+  "imageId": "string",
+  "ingredients": [
+    {
+      "name": "string",
+      "riskLevel": "Safe | Doubtful | NonHalal",
+      "confidence": "float (0-1)",
+      "reason": "string"
+    }
+  ],
+  "overallRisk": "Safe | Doubtful | NonHalal",
+  "analysisSummary": "string",
+  "timestamp": "ISO8601 string",
+  "educationalNote": "string"
+}
+```
